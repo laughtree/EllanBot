@@ -121,6 +121,5 @@ async def weather(ctx: interactions.SlashContext):
         placeholder="選擇地區",
     )
     await ctx.send(components=[location_select])
-    print(location_select.logger)
 
 bot.start(TOKEN)
