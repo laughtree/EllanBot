@@ -8,6 +8,8 @@ from ichingshifa import ichingshifa
 with open("token.txt") as f:
     TOKEN = f.readline()
 
+#1A2B猜測次數
+global guessCount
 #籤種
 fortunesticks = ["超吉", "大吉", "吉", "小吉", "吉哇哇", "微吉", "毫吉", "奈吉", "飛吉", "小凶", "凶", "平凶", "大凶", "超凶", "凶巴巴", "星爆氣流斬"]
 #測試用print("1")
@@ -73,6 +75,38 @@ async def ichingdivine(ctx: interactions.SlashContext):
     result = content[7:]
     await ctx.send(result)
 
+
+#1A2B
+
+#遊戲開始指令(要重新一定要再打一次) /game_start
+@interactions.slash_command(description="1A2B game")
+async def game_start(ctx: interactions.SlashContext):
+    global answer
+    global guessCount
+    guessCount = 0
+    answer = str(random.randrange(10))+str(random.randrange(10))+str(random.randrange(10))+str(random.randrange(10))
+    print(f'@{ctx.author} 開始了新遊戲')
+    print(f'本次題目為{answer}')
+    await ctx.send(f'{ctx.author} 開始了新遊戲')
+    await ctx.send(f"請輸入四個數字!!位置")
+
+#猜數字指令/guess XXXX
+@interactions.slash_command(description="guess numbers")
+@interactions.slash_option(name="arg", description="input", required=True, opt_type=interactions.OptionType.STRING)
+async def guess(ctx: interactions.SlashContext, arg:str):
+    global guessCount
+    guessCount = guessCount +1
+    answer_A =0
+    answer_B =0
+    for i in range(4):
+        if(arg[i]==answer[i]):
+            answer_A = answer_A +1 
+        elif(arg[i]!=answer[i] and arg[i] in answer):
+            answer_B = answer_B +1
+    if answer_A==4:
+        await ctx.send(f"終於答對啦!!!你總共猜了{guessCount}次")
+    else :
+        await ctx.send(f"{ctx.author} 猜了 {arg} {answer_A}A{answer_B}B")
 
 
 bot.start(TOKEN)
