@@ -30,7 +30,7 @@ bot = interactions.Client(intents=interactions.Intents.ALL)
 #測試用print("2")
 
 #機器人啟動
-@bot.event
+@interactions.listen()
 async def on_ready():
     print("bot ready!")
 
@@ -92,7 +92,7 @@ async def game_start(ctx: interactions.SlashContext):
             answer = answer + x
     print(f'{ctx.author} 開始了新遊戲')
     print(f'本次題目為{answer}')
-    await ctx.send(f'{ctx.author} 開始了新遊戲')
+    await ctx.send(f'{ctx.author.mention} 開始了新遊戲')
     await ctx.channel.send(f"請輸入 /guess 四個數字!!")
 
 #猜數字指令/guess XXXX
@@ -120,6 +120,12 @@ async def weather(ctx: interactions.SlashContext):
         "基隆", "新北", "台北", "桃園", "新竹", "苗栗", "台中", "彰化", "雲林", "嘉義", "台南", "高雄", "屏東", "台東", "花蓮", "宜蘭", "南投", "蘭嶼", "澎湖", "金門", "馬祖", "東沙島",
         placeholder="選擇地區",
     )
+    interactions.ActionRow()
     await ctx.send(components=[location_select])
+
+#選單監聽
+@interactions.listen()
+async def on_select(ctx: interactions.SlashContext):
+    print(ctx)
 
 bot.start(TOKEN)
