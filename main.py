@@ -40,6 +40,7 @@ async def send(ctx: interactions.SlashContext, message: str):
     await sendmsg(ctx, message)
     await commandfeedback(ctx)
 
+#運勢抽籤
 @interactions.slash_command(description="draw a fortune stick")
 async def fortune(ctx: interactions.SlashContext):
     poll=random.choice(fortunesticks)
@@ -47,6 +48,7 @@ async def fortune(ctx: interactions.SlashContext):
     RRbutton = interactions.Button(style=interactions.ButtonStyle.LINK, label="點我看詳細解籤", url="https://reurl.cc/2E0R7a")
     await ctx.send(f"今日運勢: {poll} , \n注意事項: {text}", components=[RRbutton])
 
+#常用連結
 @interactions.slash_command(description="show some commomly used NTHU related links")
 async def usefullink(ctx: interactions.SlashContext):
     buttonSIS = interactions.Button(style=interactions.ButtonStyle.LINK, label="校務資訊系統", url="https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/index.php")
@@ -54,6 +56,7 @@ async def usefullink(ctx: interactions.SlashContext):
     buttonFC = interactions.Button(style=interactions.ButtonStyle.LINK, label="課程查詢", url="https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/6/6.2/6.2.I/JH62i001.php")
     await ctx.send(components=[buttonSIS, buttonElearn, buttonFC])
 
+#易經卜卦
 @interactions.slash_command(description="use Iching to divine")
 async def ichingdivine(ctx: interactions.SlashContext):
     result = ichingshifa.Iching().bookgua_details()
