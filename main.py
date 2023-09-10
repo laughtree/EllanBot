@@ -120,12 +120,12 @@ async def weather(ctx: interactions.SlashContext):
         "基隆", "新北", "台北", "桃園", "新竹", "苗栗", "台中", "彰化", "雲林", "嘉義", "台南", "高雄", "屏東", "台東", "花蓮", "宜蘭", "南投", "蘭嶼", "澎湖", "金門", "馬祖", "東沙島",
         placeholder="選擇地區",
     )
-    interactions.ActionRow()
     await ctx.send(components=[location_select])
 
 #選單監聽
 @interactions.listen()
-async def on_select(ctx: interactions.SlashContext):
-    print(ctx)
+async def on_select(ctx: interactions.ComponentContext, placeholder: str):
+    print(ctx, placeholder)
+    await ctx.respond(f"You selected: {placeholder}")
 
 bot.start(TOKEN)
