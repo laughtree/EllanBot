@@ -1,4 +1,5 @@
 import interactions
+from interactions.api.events import Component
 import json
 import random
 import requests
@@ -117,15 +118,18 @@ async def guess(ctx: interactions.SlashContext, arg:str):
 async def weather(ctx: interactions.SlashContext):
     tracemalloc.start()
     location_select = interactions.StringSelectMenu(
-        "基隆", "新北", "台北", "桃園", "新竹", "苗栗", "台中", "彰化", "雲林", "嘉義", "台南", "高雄", "屏東", "台東", "花蓮", "宜蘭", "南投", "蘭嶼", "澎湖", "金門", "馬祖", "東沙島",
+        "基隆", "新北", "臺北", "新竹", "苗栗", "台中", "彰化", "雲林", "嘉義", "臺南", "高雄", "屏東", "臺東", "花蓮", "宜蘭", "南投", "蘭嶼", "澎湖", "金門", "馬祖", "東沙島",
         placeholder="選擇地區",
     )
-    await ctx.send(components=[location_select])
+    await ctx.respond(components=[location_select])
 
 #選單監聽
 @interactions.listen()
-async def on_select(ctx: interactions.ComponentContext, placeholder: str):
-    print(ctx, placeholder)
-    await ctx.respond(f"You selected: {placeholder}")
+async def on_select(event: Component):
+    ctx = event.ctx
+    print(f"{ctx.author}查詢{ctx.values[0]}的天氣")
+    result = requests.get("https://opendata.cwb.gov.tw/api/v1/rest/datastore/O-A0003-001", params={"Authorization":"CWB-A983AAB5-E965-49F9-93CB-DD703B276139", "locationName":[ctx.values[0]], "parameterName":["CITY"], "elementName":["Weather","TIME","HUMD","TEMP"]}).json()['records']['location'][0]
+    print(result)
+    await ctx.send(f"{result['locationName']}   {result['weatherElement'][2]['elementValue']}  氣溫{result['weatherElement'][0]['elementValue']}℃   濕度{float(result['weatherElement'][1]['elementValue'])*100}%   (紀錄時間 {result['time']['obsTime']})")
 
 bot.start(TOKEN)
